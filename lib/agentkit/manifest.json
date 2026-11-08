@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-accredible",
+      "description": "Connect AI agents to Accredible Certificates using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-accredible/SKILL.md": "e3a132f8b740a1fbee4468ffac0fbf78f942d563a3ff6d50ab927384acceb121"
+  }
+}
