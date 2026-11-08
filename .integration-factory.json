@@ -5,20 +5,22 @@
   "releaseEligible": true,
   "maintainer": "jannikco",
   "license": "MIT",
-  "sourceRevision": "e4f285425fde05d11002927da16b242ae6781e66eb3d3ab6593f7024c5ff61b2",
+  "sourceRevision": "78a172acc1a7c061d7a4f649a05b884c74964c964f8d85168df56197fe5d9260",
   "evidence": [
-    "Source-backed provider setup metadata",
-    "Offline configuration and MCP protocol tests"
+    "Actual tools/call and direct-provider request contract tests"
   ],
   "provenance": [
     "https://docs.api.accredible.com/openapi.json"
   ],
   "id": "accredible-mcp",
-  "kind": "mcp-setup",
+  "kind": "provider-connector",
   "product": "pipmcp",
-  "title": "Accredible Certificates MCP setup and connection checker",
-  "description": "Generate Accredible Certificates MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.",
-  "operationIds": [],
+  "title": "Accredible Certificates MCP server",
+  "description": "Inspect an issued credential and create an unapproved credential for an existing credential group.",
+  "operationIds": [
+    "accredible_get_credential",
+    "accredible_create_credential"
+  ],
   "appSlug": "accredible",
   "appName": "Accredible Certificates",
   "providerDocs": "https://docs.api.accredible.com/openapi.json",
@@ -28,12 +30,276 @@
     "requiredCredentialFields": [
       "api_key"
     ],
+    "settings": {
+      "parameter_name": "Authorization"
+    },
     "requiredHeaderNames": [],
     "helpUrl": "https://docs.api.accredible.com/",
     "tenantRequired": false,
     "accountParameterNames": []
   },
   "attributionSlug": "github-accredible-mcp",
+  "artifactType": "connector",
+  "qualityVersion": 2,
+  "connectorId": "accredible",
+  "connector": {
+    "id": "accredible",
+    "name": "Accredible Certificates",
+    "version": "0.1.0",
+    "baseUrl": "https://api.accredible.com",
+    "auth": {
+      "type": "header",
+      "env": "ACCREDIBLE_API_KEY",
+      "header": "Authorization",
+      "prefix": "Token token="
+    },
+    "tools": [
+      {
+        "name": "accredible_get_credential",
+        "description": "accredible get credential",
+        "method": "GET",
+        "path": "/v1/credentials/{id}",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [
+            "id"
+          ],
+          "query": {},
+          "body": {}
+        },
+        "approvalRequired": false,
+        "provenance": [
+          "https://docs.api.accredible.com/openapi.json"
+        ],
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "sampleArguments": {
+          "id": "REPLACE_WITH_AUTHORIZED_ID"
+        }
+      },
+      {
+        "name": "accredible_create_credential",
+        "description": "Create an unapproved credential in an existing group. Supply name/description when not configured on the group.",
+        "method": "POST",
+        "path": "/v1/credentials",
+        "readOnly": false,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "recipient_name": {
+              "type": "string"
+            },
+            "recipient_email": {
+              "type": "string"
+            },
+            "group_id": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "recipient_name",
+            "recipient_email",
+            "group_id"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {},
+          "body": {
+            "recipient_name": "credential.recipient.name",
+            "recipient_email": "credential.recipient.email",
+            "group_id": "credential.group_id",
+            "name": "credential.name",
+            "description": "credential.description"
+          }
+        },
+        "approvalRequired": true,
+        "body": {
+          "credential": {
+            "approve": false
+          }
+        },
+        "provenance": [
+          "https://docs.api.accredible.com/openapi.json"
+        ],
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "sampleArguments": {
+          "recipient_name": "Sandbox Example",
+          "recipient_email": "sandbox@example.com",
+          "group_id": 42
+        }
+      }
+    ],
+    "workflow": {
+      "name": "accredible-workflow",
+      "description": "Inspect an issued credential and create an unapproved credential for an existing credential group.",
+      "steps": [
+        "accredible_get_credential",
+        "accredible_create_credential"
+      ]
+    },
+    "provenance": [
+      "https://docs.api.accredible.com/openapi.json"
+    ],
+    "sourceEvidence": {
+      "state": "documented",
+      "providerLiveValidation": "not-run",
+      "checkedAt": "2026-11-08",
+      "operationCount": 2,
+      "kind": "official-openapi-catalog-snapshot",
+      "sha256": "71f24e1a9fe8a1909f4cb0f3128823b4e2b031426e99815fe00be90ec4a83d20",
+      "note": "Original vendor specification retained by the public PipMCP catalog; read-only extraction of selected request example and operation paths, because direct spec fetch currently returns403. No provider execution was performed."
+    },
+    "setup": {
+      "requiresPipMcpAccount": false,
+      "credentialsHelpUrl": "https://docs.api.accredible.com/",
+      "instructions": "API keys are managed in the Accredible Dashboard (dashboard.accredible.com). Create or copy an account-wide API key (a department key only reaches that department's credentials, groups and designs) and paste it here."
+    },
+    "sampleWarning": "Example IDs are placeholders, not known provider records. Replace them with authorized sandbox/account IDs. Contact emails, file URLs and recipient numbers must be replaced with data you are authorized to use. Examples never authorize a write.",
+    "repoId": "accredible-mcp",
+    "appSlug": "accredible",
+    "product": "pipmcp",
+    "artifactType": "connector",
+    "sourceRevision": "78a172acc1a7c061d7a4f649a05b884c74964c964f8d85168df56197fe5d9260",
+    "capabilityEvidence": {
+      "local": {
+        "level": "Tested",
+        "operations": [
+          {
+            "name": "accredible_get_credential",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "accredible_create_credential",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          }
+        ],
+        "evidenceRefs": [
+          "Provider request/stdio contract tests"
+        ],
+        "mode": "local"
+      },
+      "managed": {
+        "level": "Documented",
+        "operations": [
+          {
+            "name": "accredible_get_credential",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "accredible_create_credential",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          }
+        ],
+        "evidenceRefs": [],
+        "mode": "managed"
+      }
+    },
+    "authentication": {
+      "type": "api_key_header",
+      "requiredCredentialFields": [
+        "api_key"
+      ],
+      "settings": {
+        "parameter_name": "Authorization"
+      },
+      "requiredHeaderNames": [],
+      "helpUrl": "https://docs.api.accredible.com/",
+      "tenantRequired": false,
+      "accountParameterNames": []
+    },
+    "managedAvailability": {
+      "status": "listed",
+      "checkedAt": "2026-11-08T12:29:10.433747+00:00"
+    }
+  },
+  "capabilityEvidence": {
+    "local": {
+      "level": "Tested",
+      "operations": [
+        {
+          "name": "accredible_get_credential",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "accredible_create_credential",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        }
+      ],
+      "evidenceRefs": [
+        "Provider request/stdio contract tests"
+      ],
+      "mode": "local"
+    },
+    "managed": {
+      "level": "Documented",
+      "operations": [
+        {
+          "name": "accredible_get_credential",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "accredible_create_credential",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        }
+      ],
+      "evidenceRefs": [],
+      "mode": "managed"
+    }
+  },
+  "utility": {
+    "problem": "Inspect an issued credential and create an unapproved credential for an existing credential group.",
+    "output": "Actual provider API results through local MCP tools"
+  },
   "factory": "leadadapter-pipmcp",
-  "generatorVersion": 1
+  "generatorVersion": 2
 }
