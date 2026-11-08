@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "status": "ready",
+  "verification": "mock-only",
+  "releaseEligible": true,
+  "maintainer": "jannikco",
+  "license": "MIT",
+  "sourceRevision": "e4f285425fde05d11002927da16b242ae6781e66eb3d3ab6593f7024c5ff61b2",
+  "evidence": [
+    "Source-backed provider setup metadata",
+    "Offline configuration and MCP protocol tests"
+  ],
+  "provenance": [
+    "https://docs.api.accredible.com/openapi.json"
+  ],
+  "id": "accredible-mcp",
+  "kind": "mcp-setup",
+  "product": "pipmcp",
+  "title": "Accredible Certificates MCP setup and connection checker",
+  "description": "Generate Accredible Certificates MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.",
+  "operationIds": [],
+  "appSlug": "accredible",
+  "appName": "Accredible Certificates",
+  "providerDocs": "https://docs.api.accredible.com/openapi.json",
+  "providerWebsite": "https://www.accredible.com/",
+  "authentication": {
+    "type": "api_key_header",
+    "requiredCredentialFields": [
+      "api_key"
+    ],
+    "requiredHeaderNames": [],
+    "helpUrl": "https://docs.api.accredible.com/",
+    "tenantRequired": false,
+    "accountParameterNames": []
+  },
+  "attributionSlug": "github-accredible-mcp"
+}
